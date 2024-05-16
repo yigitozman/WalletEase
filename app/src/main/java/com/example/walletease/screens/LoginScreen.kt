@@ -12,10 +12,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -43,137 +43,133 @@ import kotlinx.coroutines.launch
 fun LoginScreen(navController: NavController, authViewModel: AuthViewModel, sharedViewModel: SharedViewModel) {
     authViewModel.clearError()
 
-    MaterialTheme {
+    val colors = MaterialTheme.colorScheme
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val focusRequesterPassword = FocusRequester()
+    val showError by authViewModel.showError.observeAsState()
 
-        val colors = MaterialTheme.colorScheme
-        var email by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
-        val focusRequesterPassword = FocusRequester()
-        val showError by authViewModel.showError.observeAsState()
+    val successMessage = sharedViewModel.successMessage.collectAsState().value
 
-        val successMessage = sharedViewModel.successMessage.collectAsState().value
+    DisposableEffect(email, password) {
+        onDispose {
+            sharedViewModel.setSuccessMessage("")
+        }
+    }
 
-        DisposableEffect(email, password) {
-            onDispose {
+    if (successMessage?.isNotEmpty() == true) {
+        AlertDialog(
+            onDismissRequest = {
                 sharedViewModel.setSuccessMessage("")
-            }
-        }
-
-        if (successMessage?.isNotEmpty() == true) {
-            AlertDialog(
-                onDismissRequest = {
-                    sharedViewModel.setSuccessMessage("")
-                },
-                title = {
-                    Text(text = "Success")
-                },
-                text = {
-                    Text(text = successMessage)
-                },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            sharedViewModel.setSuccessMessage("")
-                        }
-                    ) {
-                        Text("OK")
-                    }
-                }
-            )
-        }
-
-        Card(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Login",
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = colors.primary
-                )
-                Spacer(modifier = Modifier.height(15.dp))
-
-                TextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Next
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = {
-                            focusRequesterPassword.requestFocus()
-                        }
-                    ),
-                    label = { Text("Email", style = MaterialTheme.typography.bodyMedium) },
-                    shape = MaterialTheme.shapes.medium,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    textStyle = MaterialTheme.typography.bodyLarge
-                )
-
-                TextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
-                    ),
-                    label = { Text("Password", style = MaterialTheme.typography.bodyMedium) },
-                    shape = MaterialTheme.shapes.medium,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequesterPassword),
-                    visualTransformation = PasswordVisualTransformation(),
-                    textStyle = MaterialTheme.typography.bodyLarge
-                )
-
-                if (showError != null && showError!!.isNotEmpty()) {
-                    Text(
-                        text = showError!!,
-                        color = colors.error
-                    )
-                }
-
+            },
+            title = {
+                Text(text = "Success")
+            },
+            text = {
+                Text(text = successMessage)
+            },
+            confirmButton = {
                 Button(
                     onClick = {
-                        authViewModel.viewModelScope.launch {
-                            authViewModel.login(email, password).addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    navController.navigate("home_screen")
-                                }
+                        sharedViewModel.setSuccessMessage("")
+                    }
+                ) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = colors.surface
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Login",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                color = colors.primary
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        focusRequesterPassword.requestFocus()
+                    }
+                ),
+                label = { Text("Email", style = MaterialTheme.typography.bodyMedium) },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                textStyle = MaterialTheme.typography.bodyLarge
+            )
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done
+                ),
+                label = { Text("Password", style = MaterialTheme.typography.bodyMedium) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequesterPassword),
+                visualTransformation = PasswordVisualTransformation(),
+                textStyle = MaterialTheme.typography.bodyLarge
+            )
+
+            if (showError != null && showError!!.isNotEmpty()) {
+                Text(
+                    text = showError!!,
+                    color = colors.error
+                )
+            }
+
+            Button(
+                onClick = {
+                    authViewModel.viewModelScope.launch {
+                        authViewModel.login(email, password).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                navController.navigate("home_screen")
                             }
                         }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(15.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = colors.primary),
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Text("Login", color = colors.onPrimary)
-                }
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = colors.primary),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text("Login", color = colors.onPrimary)
+            }
 
 
-                Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-                Button(
-                    onClick = {
-                        navController.navigate("signup_screen")
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(15.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = colors.primary),
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Text("Don't have an account? Sign up", color = colors.onPrimary)
-                }
+            Button(
+                onClick = {
+                    navController.navigate("signup_screen")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = colors.primary),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text("Don't have an account? Sign up", color = colors.onPrimary)
             }
         }
     }

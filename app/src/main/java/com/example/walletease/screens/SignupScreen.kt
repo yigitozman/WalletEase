@@ -11,10 +11,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -49,8 +49,9 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel, sha
         val showError by authViewModel.showError.observeAsState()
         var emptyUserError by remember { mutableStateOf(false) }
 
-        Card(
-            modifier = Modifier.fillMaxSize()
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = colors.surface
         ) {
             Column(
                 modifier = Modifier
@@ -67,7 +68,7 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel, sha
                 )
                 Spacer(modifier = Modifier.height(15.dp))
 
-                TextField(
+                OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -79,7 +80,6 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel, sha
                         }
                     ),
                     label = { Text("Email", style = MaterialTheme.typography.bodyMedium) },
-                    shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
                         .fillMaxWidth(),
                     textStyle = MaterialTheme.typography.bodyLarge
@@ -89,14 +89,13 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel, sha
                     Text(text = "Email or Password can't be empty.", color = colors.error)
                 }
 
-                TextField(
+                OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done
                     ),
                     label = { Text("Password", style = MaterialTheme.typography.bodyMedium) },
-                    shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(focusRequesterPassword),
