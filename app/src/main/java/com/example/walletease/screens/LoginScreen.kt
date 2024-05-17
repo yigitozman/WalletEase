@@ -140,10 +140,15 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel, shar
 
             Button(
                 onClick = {
-                    authViewModel.viewModelScope.launch {
-                        authViewModel.login(email, password).addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                navController.navigate(Screens.Dashboard.route)
+                    if (email.isEmpty() || password.isEmpty()) {
+                        authViewModel.setError("Email or Password is empty.")
+                    }
+                    else {
+                        authViewModel.viewModelScope.launch {
+                            authViewModel.login(email, password).addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    navController.navigate(Screens.Dashboard.route)
+                                }
                             }
                         }
                     }

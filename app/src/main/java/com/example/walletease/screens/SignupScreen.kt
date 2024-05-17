@@ -112,11 +112,16 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel, sha
 
                 Button(
                     onClick = {
-                        authViewModel.viewModelScope.launch {
-                            authViewModel.signUp(email, password).addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    sharedViewModel.setSuccessMessage("Account created successfully!")
-                                    navController.popBackStack()
+                        if (email.isEmpty() || password.isEmpty()) {
+                            authViewModel.setError("Email or Password is empty.")
+                        }
+                        else {
+                            authViewModel.viewModelScope.launch {
+                                authViewModel.signUp(email, password).addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        sharedViewModel.setSuccessMessage("Account created successfully!")
+                                        navController.popBackStack()
+                                    }
                                 }
                             }
                         }

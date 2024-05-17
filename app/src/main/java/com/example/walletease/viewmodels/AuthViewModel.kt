@@ -24,6 +24,10 @@ class AuthViewModel(private val state: SavedStateHandle) : ViewModel() {
         _currentUser.value = user
     }
 
+    fun setError(error: String) {
+        showError.value = error
+    }
+
     fun clearError() {
         showError.value = ""
     }
