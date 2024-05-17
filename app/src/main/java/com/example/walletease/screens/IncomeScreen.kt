@@ -17,7 +17,7 @@ import androidx.navigation.NavController
 import com.example.walletease.viewmodels.AuthViewModel
 
 @Composable
-fun HomeScreen(navController: NavController, authViewModel: AuthViewModel) {
+fun IncomeScreen(navController: NavController, authViewModel: AuthViewModel) {
     val user by authViewModel.currentUser.observeAsState()
     val colors = MaterialTheme.colorScheme
 
@@ -32,7 +32,7 @@ fun HomeScreen(navController: NavController, authViewModel: AuthViewModel) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Hello, Home Screen")
+                Text(text = "Income Screen")
             }
         }
     }
