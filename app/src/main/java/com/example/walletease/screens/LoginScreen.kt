@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.walletease.sealedclasses.Screens
 import com.example.walletease.viewmodels.AuthViewModel
 import com.example.walletease.viewmodels.SharedViewModel
 import kotlinx.coroutines.launch
@@ -142,7 +143,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel, shar
                     authViewModel.viewModelScope.launch {
                         authViewModel.login(email, password).addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                navController.navigate("home_screen")
+                                navController.navigate(Screens.Dashboard.route)
                             }
                         }
                     }

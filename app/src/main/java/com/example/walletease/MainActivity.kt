@@ -24,15 +24,21 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.walletease.screens.HomeScreen
+import com.example.walletease.screens.CurrencyConverterScreen
+import com.example.walletease.screens.DashboardScreen
+import com.example.walletease.screens.ExpenseScreen
+import com.example.walletease.screens.IncomeScreen
 import com.example.walletease.screens.LoginScreen
 import com.example.walletease.screens.ProfileScreen
 import com.example.walletease.screens.SignUpScreen
+import com.example.walletease.screens.SplitScreen
+import com.example.walletease.screens.SubscriptionScreen
 import com.example.walletease.sealedclasses.Screens
 import com.example.walletease.sealedclasses.items
 import com.example.walletease.ui.theme.WalletEaseTheme
@@ -71,17 +77,39 @@ fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel) {
     MaterialTheme {
         Scaffold(
             bottomBar = {
-                if (currentRoute in listOf(Screens.Home.route, Screens.Profile.route)) {
+                if (currentRoute in listOf(Screens.Dashboard.route, Screens.Subscription.route, Screens.CurrencyConverter.route,
+                        Screens.Split.route, Screens.Profile.route)) {
                     NavigationBar {
                         items.forEachIndexed { index, screen ->
                             NavigationBarItem(
                                 icon = {
                                     when (screen) {
-                                        is Screens.Home -> {
+                                        is Screens.Dashboard -> {
                                             if (currentRoute == screen.route) {
                                                 Icon(Icons.Filled.Home, contentDescription = screen.route)
                                             } else {
                                                 Icon(Icons.Outlined.Home, contentDescription = screen.route)
+                                            }
+                                        }
+                                        is Screens.Subscription -> {
+                                            if (currentRoute == screen.route) {
+                                                Icon(painterResource(R.drawable.filled_event_repeat_24), contentDescription = screen.route)
+                                            } else {
+                                                Icon(painterResource(R.drawable.outline_event_repeat_24), contentDescription = screen.route)
+                                            }
+                                        }
+                                        is Screens.CurrencyConverter -> {
+                                            if (currentRoute == screen.route) {
+                                                Icon(painterResource(R.drawable.filled_change_circle_24), contentDescription = screen.route)
+                                            } else {
+                                                Icon(painterResource(R.drawable.outline_change_circle_24), contentDescription = screen.route)
+                                            }
+                                        }
+                                        is Screens.Split -> {
+                                            if (currentRoute == screen.route) {
+                                                Icon(painterResource(R.drawable.filled_receipt_long_24), contentDescription = screen.route)
+                                            } else {
+                                                Icon(painterResource(R.drawable.outline_receipt_long_24), contentDescription = screen.route)
                                             }
                                         }
                                         is Screens.Profile -> {
@@ -91,8 +119,7 @@ fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel) {
                                                 Icon(Icons.Outlined.AccountCircle, contentDescription = screen.route)
                                             }
                                         }
-                                        Screens.Login -> TODO()
-                                        Screens.Signup -> TODO()
+                                        else -> { }
                                     }
                                 },
                                 selected = selectedItem == index,
@@ -120,8 +147,23 @@ fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel) {
                 composable(Screens.Signup.route) {
                     SignUpScreen(navController, authViewModel, sharedViewModel)
                 }
-                composable(Screens.Home.route) {
-                    HomeScreen(navController, authViewModel)
+                composable(Screens.Dashboard.route) {
+                    DashboardScreen(navController, authViewModel)
+                }
+                composable(Screens.Income.route) {
+                    IncomeScreen(navController, authViewModel)
+                }
+                composable(Screens.Expense.route) {
+                    ExpenseScreen(navController, authViewModel)
+                }
+                composable(Screens.Subscription.route) {
+                    SubscriptionScreen(navController, authViewModel)
+                }
+                composable(Screens.CurrencyConverter.route) {
+                    CurrencyConverterScreen(navController, authViewModel)
+                }
+                composable(Screens.Split.route) {
+                    SplitScreen(navController, authViewModel)
                 }
                 composable(Screens.Profile.route) {
                     ProfileScreen(navController, authViewModel)
