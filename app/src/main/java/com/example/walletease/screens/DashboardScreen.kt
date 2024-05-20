@@ -1,5 +1,6 @@
 package com.example.walletease.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,8 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,10 +22,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.walletease.R
 import com.example.walletease.sealedclasses.Screens
 import com.example.walletease.viewmodels.AuthViewModel
+import com.hd.charts.PieChartView
+import com.hd.charts.common.model.ChartDataSet
+import com.hd.charts.style.ChartViewDefaults
+import com.hd.charts.style.ChartViewStyle
+import com.hd.charts.style.PieChartDefaults
 
 @Composable
 fun DashboardScreen(navController: NavController, authViewModel: AuthViewModel) {
@@ -36,77 +48,106 @@ fun DashboardScreen(navController: NavController, authViewModel: AuthViewModel) 
 
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Balance: 1000", modifier = Modifier.align(Alignment.CenterHorizontally).padding(15.dp),)
+        val pieColors = listOf(
+            Color.Green,
+            Color.Red
+        )
+
+        val style = PieChartDefaults.style(
+            borderColor = colors.background,
+            donutPercentage = 40f,
+            borderWidth = 6f,
+            pieColors = pieColors,
+            chartViewStyle = custom(width = 300.dp)
+        )
+
+        val dataSet = ChartDataSet(
+            items = listOf(5f, 10f),
+            title = "Monthly Chart",
+            prefix = "Category ",
+            postfix = " $"
+        )
+
+        PieChartView(dataSet = dataSet, style = style)
+
+        Text(text = "Balance: 1000", modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .padding(15.dp),)
 
         Row(
-            modifier = Modifier.padding(top = 16.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                onClick = { incomeExpandedState = !incomeExpandedState }
+                    .weight(1f)
+                    .height(150.dp),
+                onClick = { navController.navigate(Screens.Income.route) },
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFF4CAF50)
+                )
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(16.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "Monthly Income: 2000", style = MaterialTheme.typography.headlineSmall)
+                    Image(
+                        painter = painterResource(id = R.drawable.baseline_attach_money_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp),
+                        colorFilter = ColorFilter.tint(Color.White)
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
-                    if (incomeExpandedState) {
-                        for (i in 1..5) {
-                            Text(text = "Income Category $i: 2000")
-                        }
-                        Button(
-                            onClick = { navController.navigate(Screens.Income.route) },
-                            modifier = Modifier.align(Alignment.End)
-                        ) {
-                            Text(text = "View More")
-                        }
-                    }
+                    Text(text = "Income", style = MaterialTheme.typography.headlineSmall, color = Color.White)
                 }
             }
-        }
-
-        Row(
-            modifier = Modifier.padding(top = 16.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
             Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                onClick = { expenseExpandedState = !expenseExpandedState }
+                    .weight(1f)
+                    .height(150.dp),
+                onClick = { navController.navigate(Screens.Expense.route) },
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFF44336)
+                )
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(16.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "Monthly Expense: 1000", style = MaterialTheme.typography.headlineSmall)
+                    Image(
+                        painter = painterResource(id = R.drawable.baseline_money_off_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp),
+                        colorFilter = ColorFilter.tint(Color.White)
+                    )
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    if (expenseExpandedState) {
-                        for (i in 1..5) {
-                            Text(text = "Expense Category $i: 1000")
-                        }
-                        Button(
-                            onClick = { navController.navigate(Screens.Expense.route) },
-                            modifier = Modifier.align(Alignment.End)
-                        ) {
-                            Text(text = "View More")
-                        }
-                    }
+
+                    Text(text = "Expense", style = MaterialTheme.typography.headlineSmall, color = Color.White)
                 }
             }
         }
     }
+}
+
+@Composable
+fun custom(width: Dp = Dp.Infinity): ChartViewStyle {
+    val colors = MaterialTheme.colorScheme
+
+    return ChartViewDefaults.style(
+        width = width,
+        cornerRadius = 10.dp,
+        backgroundColor = colors.background,
+        shadow = 0.dp)
 }
 
 

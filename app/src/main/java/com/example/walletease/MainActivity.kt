@@ -44,12 +44,15 @@ import com.example.walletease.sealedclasses.items
 import com.example.walletease.ui.theme.WalletEaseTheme
 import com.example.walletease.viewmodels.AuthViewModel
 import com.example.walletease.viewmodels.SharedViewModel
+import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.firestore
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
+        Firebase.firestore
         enableEdgeToEdge()
 
         val authViewModel: AuthViewModel by viewModels()

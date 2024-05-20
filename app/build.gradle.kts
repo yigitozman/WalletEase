@@ -69,6 +69,8 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.charts)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

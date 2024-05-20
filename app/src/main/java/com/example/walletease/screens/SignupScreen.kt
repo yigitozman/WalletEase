@@ -47,7 +47,6 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel, sha
         var password by remember { mutableStateOf("") }
         val focusRequesterPassword = FocusRequester()
         val showError by authViewModel.showError.observeAsState()
-        var emptyUserError by remember { mutableStateOf(false) }
 
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -84,10 +83,6 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel, sha
                         .fillMaxWidth(),
                     textStyle = MaterialTheme.typography.bodyLarge
                 )
-
-                if (emptyUserError) {
-                    Text(text = "Email or Password can't be empty.", color = colors.error)
-                }
 
                 OutlinedTextField(
                     value = password,
