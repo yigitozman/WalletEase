@@ -43,6 +43,7 @@ import com.example.walletease.sealedclasses.Screens
 import com.example.walletease.sealedclasses.items
 import com.example.walletease.ui.theme.WalletEaseTheme
 import com.example.walletease.viewmodels.AuthViewModel
+import com.example.walletease.viewmodels.CurrencyViewModel
 import com.example.walletease.viewmodels.SharedViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
@@ -56,6 +57,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val authViewModel: AuthViewModel by viewModels()
+        val currencyViewModel: CurrencyViewModel by viewModels()
 
         setContent {
             WalletEaseTheme {
@@ -63,7 +65,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background) {
-                    MyApp(authViewModel, sharedViewModel)
+                    MyApp(authViewModel, sharedViewModel, currencyViewModel)
                 }
             }
         }
@@ -71,7 +73,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel) {
+fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, currencyViewModel: CurrencyViewModel) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -163,7 +165,7 @@ fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel) {
                     SubscriptionScreen(navController, authViewModel)
                 }
                 composable(Screens.CurrencyConverter.route) {
-                    CurrencyConverterScreen(navController, authViewModel)
+                    CurrencyConverterScreen(navController, authViewModel, currencyViewModel)
                 }
                 composable(Screens.Split.route) {
                     SplitScreen(navController, authViewModel)

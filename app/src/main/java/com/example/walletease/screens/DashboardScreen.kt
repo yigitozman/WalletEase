@@ -75,7 +75,8 @@ fun DashboardScreen(navController: NavController, authViewModel: AuthViewModel) 
 
         Text(text = "Balance: 1000", modifier = Modifier
             .align(Alignment.CenterHorizontally)
-            .padding(15.dp),)
+            .padding(bottom = 15.dp),
+            style = MaterialTheme.typography.headlineSmall)
 
         Row(
             modifier = Modifier

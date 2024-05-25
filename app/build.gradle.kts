@@ -71,6 +71,8 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.charts)
     implementation(libs.firebase.firestore)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
