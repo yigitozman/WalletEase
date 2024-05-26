@@ -1,7 +1,9 @@
 package com.example.walletease
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -19,13 +21,16 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -49,6 +54,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.firestore
 
+//todo: it closes even if there is more back history at dashboard screen
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,9 +81,29 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, currencyViewModel: CurrencyViewModel) {
     val navController = rememberNavController()
+    val context = LocalContext.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     var selectedItem by rememberSaveable { mutableIntStateOf(0) }
+
+    BackHandler(enabled = currentRoute == Screens.Dashboard.route) {
+        if (currentRoute == Screens.Dashboard.route) {
+            (context as? Activity)?.finish()
+        } else {
+            navController.popBackStack()
+        }
+    }
+
+    LaunchedEffect(currentRoute) {
+        selectedItem = when (currentRoute) {
+            Screens.Dashboard.route -> 0
+            Screens.Subscription.route -> 1
+            Screens.CurrencyConverter.route -> 2
+            Screens.Split.route -> 3
+            Screens.Profile.route -> 4
+            else -> 0
+        }
+    }
 
     MaterialTheme {
         Scaffold(
@@ -131,8 +157,11 @@ fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, curren
                                 onClick = {
                                     selectedItem = index
                                     navController.navigate(screen.route) {
-                                        popUpTo(navController.graph.startDestinationId)
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
                                         launchSingleTop = true
+                                        restoreState = true
                                     }
                                 }
                             )

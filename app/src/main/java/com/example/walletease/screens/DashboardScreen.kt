@@ -1,5 +1,6 @@
 package com.example.walletease.screens
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,13 +18,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -41,10 +40,9 @@ import com.hd.charts.style.PieChartDefaults
 fun DashboardScreen(navController: NavController, authViewModel: AuthViewModel) {
     val user by authViewModel.currentUser.observeAsState()
     val colors = MaterialTheme.colorScheme
-    var incomeExpandedState by remember { mutableStateOf(false) }
-    var expenseExpandedState by remember { mutableStateOf(false) }
+    val activity = LocalContext.current as Activity
 
-    //todo: add a pie / donut chart and change subscriptions part to modify subscriptions, also make cards expandable cards that will show last 5 income or expense and a button to show all that will go to the wanted page
+    //todo: add a pie / donut chart and change subscriptions part to modify subscriptions
 
     Column(
         modifier = Modifier.fillMaxSize(),

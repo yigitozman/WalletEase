@@ -12,16 +12,43 @@ class CurrencyViewModel : ViewModel() {
     private val _exchangeRates = MutableStateFlow<Map<String, Double>>(emptyMap())
     val exchangeRates: StateFlow<Map<String, Double>> get() = _exchangeRates
 
+    private val _conversionResult = MutableStateFlow<String?>(null)
+    val conversionResult: StateFlow<String?> get() = _conversionResult
+
+    private val _isFetching = MutableStateFlow(false)
+    val isFetching: StateFlow<Boolean> get() = _isFetching
+
     private val apiService = CurrencyApiService.create()
 
-    fun fetchLatestRates(base: String) {
+    private fun fetchLatestRates(base: String) {
         val apiKey = "YOUR_API_KEY"
         viewModelScope.launch {
+            _isFetching.value = true
             try {
                 val response = apiService.getLatestRates(apiKey, base)
                 _exchangeRates.value = response.rates
             } catch (e: Exception) {
                 // Handle error
+            } finally {
+                _isFetching.value = false
+            }
+        }
+    }
+
+    fun convertCurrency(amount: Double, baseCurrency: String, targetCurrency: String) {
+        viewModelScope.launch {
+            _conversionResult.value = "Fetching conversion rate..."
+            fetchLatestRates(baseCurrency)
+            _isFetching.collect { isFetching ->
+                if (!isFetching) {
+                    val rate = _exchangeRates.value[targetCurrency]
+                    if (rate != null) {
+                        val convertedAmount = amount * rate
+                        _conversionResult.value = "$amount $baseCurrency is $convertedAmount $targetCurrency"
+                    } else {
+                        _conversionResult.value = "Conversion rate not available"
+                    }
+                }
             }
         }
     }
