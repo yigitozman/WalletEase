@@ -1,4 +1,4 @@
-package com.example.walletease.viewmodels
+package com.example.walletease.screens.UserConfiguration.viewmodel
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,4 +1,4 @@
-package com.example.walletease.screens
+package com.example.walletease.screens.CurrencyConverterScreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -30,9 +31,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.walletease.dataclasses.predefinedCurrencies
-import com.example.walletease.viewmodels.AuthViewModel
-import com.example.walletease.viewmodels.CurrencyViewModel
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.example.walletease.R
+import com.example.walletease.screens.CurrencyConverterScreen.dataclasses.predefinedCurrencies
+import com.example.walletease.screens.CurrencyConverterScreen.dialogscreen.CurrencySelectionDialog
+import com.example.walletease.screens.CurrencyConverterScreen.viewmodel.CurrencyViewModel
+import com.example.walletease.screens.UserConfiguration.viewmodel.AuthViewModel
 
 //todo: bottom conversion stays when i change screen but amount on text field goes away
 @Composable
@@ -45,6 +53,15 @@ fun CurrencyConverterScreen(navController: NavController, authViewModel: AuthVie
     val conversionResult by currencyViewModel.conversionResult.collectAsState()
     val isFetching by currencyViewModel.isFetching.collectAsState()
 
+    var isPlaying by remember { mutableStateOf(true) }
+    val composition by rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(R.raw.currencyconverteranimation)
+    )
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever
+    )
+
     var showBaseCurrencyDialog by remember { mutableStateOf(false) }
     var showTargetCurrencyDialog by remember { mutableStateOf(false) }
 
@@ -56,10 +73,13 @@ fun CurrencyConverterScreen(navController: NavController, authViewModel: AuthVie
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                "Currency Converter",
-                style = MaterialTheme.typography.headlineSmall,
-                color = colors.primary
+
+            LottieAnimation(
+                composition = composition,
+                progress = {
+                    progress
+                },
+                modifier = Modifier.size(240.dp)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -108,7 +128,6 @@ fun CurrencyConverterScreen(navController: NavController, authViewModel: AuthVie
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // This Box will reserve space for the progress indicator or result text
             Box(modifier = Modifier.fillMaxWidth().height(80.dp), contentAlignment = Alignment.Center) {
                 if (isFetching) {
                     CircularProgressIndicator()

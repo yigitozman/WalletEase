@@ -1,4 +1,4 @@
-package com.example.walletease.viewmodels
+package com.example.walletease.screens.CurrencyConverterScreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -44,7 +44,7 @@ class CurrencyViewModel : ViewModel() {
                     val rate = _exchangeRates.value[targetCurrency]
                     if (rate != null) {
                         val convertedAmount = amount * rate
-                        _conversionResult.value = "$amount $baseCurrency is $convertedAmount $targetCurrency"
+                        _conversionResult.value = "$amount $baseCurrency\n$convertedAmount $targetCurrency"
                     } else {
                         _conversionResult.value = "Conversion rate not available"
                     }

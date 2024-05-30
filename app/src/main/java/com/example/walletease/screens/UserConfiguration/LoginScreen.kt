@@ -1,5 +1,6 @@
-package com.example.walletease.screens
+package com.example.walletease.screens.UserConfiguration
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,16 +34,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.example.walletease.R
+import com.example.walletease.screens.UserConfiguration.viewmodel.AuthViewModel
+import com.example.walletease.screens.UserConfiguration.viewmodel.SharedViewModel
 import com.example.walletease.sealedclasses.Screens
-import com.example.walletease.viewmodels.AuthViewModel
-import com.example.walletease.viewmodels.SharedViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -55,12 +61,25 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel, shar
     val showError by authViewModel.showError.observeAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    var isPlaying by remember { mutableStateOf(true) }
+    val composition by rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(R.raw.loginanimation)
+    )
+
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever
+    )
+
     val successMessage = sharedViewModel.successMessage.collectAsState().value
 
     DisposableEffect(email, password) {
         onDispose {
             sharedViewModel.setSuccessMessage("")
         }
+    }
+
+    BackHandler {
     }
 
     if (successMessage?.isNotEmpty() == true) {
@@ -100,12 +119,14 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel, shar
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Login",
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-                color = colors.primary
+            LottieAnimation(
+                composition = composition,
+                progress = {
+                    progress
+                },
+                modifier = Modifier.size(240.dp)
             )
+
             Spacer(modifier = Modifier.height(15.dp))
 
             OutlinedTextField(
@@ -127,7 +148,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel, shar
 
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = { password = it.replace(" ", "") },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),
@@ -181,7 +202,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel, shar
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    navController.navigate("signup_screen")
+                    navController.navigate(Screens.Signup.route)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = colors.primary)

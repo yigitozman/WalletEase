@@ -1,4 +1,4 @@
-package com.example.walletease.viewmodels
+package com.example.walletease.screens.UserConfiguration.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -52,7 +52,10 @@ class AuthViewModel(private val state: SavedStateHandle) : ViewModel() {
 
     fun signUp(email: String, password: String): Task<AuthResult> {
         return FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if (!task.isSuccessful) {
+            if (task.isSuccessful) {
+                setUser(FirebaseAuth.getInstance().currentUser)
+                showError.value = ""
+            } else {
                 when (task.exception) {
                     is FirebaseAuthUserCollisionException -> {
                         showError.value = "User with this email already exists."
@@ -69,5 +72,23 @@ class AuthViewModel(private val state: SavedStateHandle) : ViewModel() {
                 }
             }
         }
+    }
+
+    fun updatePassword(newPassword: String, callback: (Boolean, String) -> Unit) {
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.let {
+            it.updatePassword(newPassword).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    callback(true, "Password updated successfully!")
+                } else {
+                    callback(false, "Password update failed.")
+                }
+            }
+        } ?: callback(false, "No user is logged in.")
+    }
+
+    fun logout() {
+        FirebaseAuth.getInstance().signOut()
+        setUser(null)
     }
 }

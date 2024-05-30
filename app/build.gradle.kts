@@ -52,6 +52,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.lottie.compose)
     implementation(platform(libs.firebase.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -1,4 +1,4 @@
-package com.example.walletease.screens
+package com.example.walletease.screens.DashboardScreen.dialogscreens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,10 +14,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.walletease.viewmodels.AuthViewModel
+import com.example.walletease.screens.UserConfiguration.viewmodel.AuthViewModel
 
 @Composable
-fun IncomeScreen(navController: NavController, authViewModel: AuthViewModel) {
+fun ExpenseScreen(navController: NavController, authViewModel: AuthViewModel) {
     val user by authViewModel.currentUser.observeAsState()
     val colors = MaterialTheme.colorScheme
 
@@ -32,7 +32,7 @@ fun IncomeScreen(navController: NavController, authViewModel: AuthViewModel) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Income Screen")
+                Text(text = "Expense Screen")
             }
         }
     }

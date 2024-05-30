@@ -1,4 +1,4 @@
-package com.example.walletease.screens
+package com.example.walletease.screens.UserConfiguration
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,15 +29,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.example.walletease.viewmodels.AuthViewModel
-import com.example.walletease.viewmodels.SharedViewModel
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.example.walletease.R
+import com.example.walletease.screens.UserConfiguration.viewmodel.AuthViewModel
+import com.example.walletease.screens.UserConfiguration.viewmodel.SharedViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -67,12 +69,15 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel, sha
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Sign Up",
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = colors.primary
+
+                val composition by rememberLottieComposition(
+                    spec = LottieCompositionSpec.RawRes(R.raw.signupanimation)
                 )
+
+                LottieAnimation(
+                    composition = composition
+                )
+
                 Spacer(modifier = Modifier.height(15.dp))
 
                 OutlinedTextField(
@@ -94,7 +99,7 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel, sha
 
                 OutlinedTextField(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = { password = it.replace(" ", "") },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done
                     ),

@@ -1,6 +1,6 @@
 package com.example.walletease.api
 
-import com.example.walletease.dataclasses.CurrencyConvertResponse
+import com.example.walletease.screens.CurrencyConverterScreen.dataclasses.CurrencyConvertResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET

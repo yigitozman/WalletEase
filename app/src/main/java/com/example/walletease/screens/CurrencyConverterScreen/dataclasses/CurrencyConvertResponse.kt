@@ -1,4 +1,4 @@
-package com.example.walletease.dataclasses
+package com.example.walletease.screens.CurrencyConverterScreen.dataclasses
 
 data class CurrencyConvertResponse(
     val base: String,

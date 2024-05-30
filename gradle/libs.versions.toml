@@ -8,10 +8,11 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.8.0"
+lifecycleRuntimeKtx = "2.8.1"
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
-lifecycleViewmodelSavedstate = "2.8.0"
+lifecycleViewmodelSavedstate = "2.8.1"
+lottieCompose = "5.2.0"
 retrofit = "2.9.0"
 roomCommon = "2.6.1"
 roomCompiler = "2.6.1"
@@ -49,6 +50,7 @@ androidx-room-common = { group = "androidx.room", name = "room-common", version.
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+lottie-compose = { group = "lottie", name = "compose", module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 retrofit = {module = "com.squareup.retrofit2:retrofit", name = "retrofit", version.ref = "retrofit" }
 
 [plugins]

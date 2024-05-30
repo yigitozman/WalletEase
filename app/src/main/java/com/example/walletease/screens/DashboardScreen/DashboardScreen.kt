@@ -1,4 +1,4 @@
-package com.example.walletease.screens
+package com.example.walletease.screens.DashboardScreen
 
 import android.app.Activity
 import androidx.compose.foundation.Image
@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.walletease.R
+import com.example.walletease.screens.UserConfiguration.viewmodel.AuthViewModel
 import com.example.walletease.sealedclasses.Screens
-import com.example.walletease.viewmodels.AuthViewModel
 import com.hd.charts.PieChartView
 import com.hd.charts.common.model.ChartDataSet
 import com.hd.charts.style.ChartViewDefaults

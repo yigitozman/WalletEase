@@ -35,23 +35,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.walletease.screens.CurrencyConverterScreen
-import com.example.walletease.screens.DashboardScreen
-import com.example.walletease.screens.ExpenseScreen
-import com.example.walletease.screens.IncomeScreen
-import com.example.walletease.screens.LoginScreen
-import com.example.walletease.screens.ProfileScreen
-import com.example.walletease.screens.SignUpScreen
-import com.example.walletease.screens.SplitScreen
-import com.example.walletease.screens.SubscriptionScreen
+import com.example.walletease.screens.CurrencyConverterScreen.CurrencyConverterScreen
+import com.example.walletease.screens.CurrencyConverterScreen.viewmodel.CurrencyViewModel
+import com.example.walletease.screens.DashboardScreen.DashboardScreen
+import com.example.walletease.screens.DashboardScreen.dialogscreens.ExpenseScreen
+import com.example.walletease.screens.DashboardScreen.dialogscreens.IncomeScreen
+import com.example.walletease.screens.UserConfiguration.ProfileScreen
+import com.example.walletease.screens.SplitScreen.SplitScreen
+import com.example.walletease.screens.SubscriptionScreen.SubscriptionScreen
+import com.example.walletease.screens.SubscriptionScreen.viewmodel.SubscriptionViewModel
+import com.example.walletease.screens.UserConfiguration.LoginScreen
+import com.example.walletease.screens.UserConfiguration.SignUpScreen
+import com.example.walletease.screens.UserConfiguration.viewmodel.AuthViewModel
 import com.example.walletease.sealedclasses.Screens
 import com.example.walletease.sealedclasses.items
 import com.example.walletease.ui.theme.WalletEaseTheme
-import com.example.walletease.viewmodels.AuthViewModel
-import com.example.walletease.viewmodels.CurrencyViewModel
-import com.example.walletease.viewmodels.SharedViewModel
+import com.example.walletease.screens.UserConfiguration.viewmodel.SharedViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 
 //todo: it closes even if there is more back history at dashboard screen
@@ -64,6 +66,7 @@ class MainActivity : ComponentActivity() {
 
         val authViewModel: AuthViewModel by viewModels()
         val currencyViewModel: CurrencyViewModel by viewModels()
+        val subscriptionViewModel: SubscriptionViewModel by viewModels()
 
         setContent {
             WalletEaseTheme {
@@ -71,7 +74,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background) {
-                    MyApp(authViewModel, sharedViewModel, currencyViewModel)
+                    MyApp(authViewModel, sharedViewModel, currencyViewModel, subscriptionViewModel)
                 }
             }
         }
@@ -79,19 +82,25 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, currencyViewModel: CurrencyViewModel) {
+fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, currencyViewModel: CurrencyViewModel, subscriptionViewModel: SubscriptionViewModel) {
     val navController = rememberNavController()
     val context = LocalContext.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     var selectedItem by rememberSaveable { mutableIntStateOf(0) }
 
-    BackHandler(enabled = currentRoute == Screens.Dashboard.route) {
-        if (currentRoute == Screens.Dashboard.route) {
-            (context as? Activity)?.finish()
-        } else {
-            navController.popBackStack()
-        }
+    var startDestination: String
+
+    val user = Firebase.auth.currentUser
+
+    if (user != null) {
+        startDestination = Screens.Profile.route
+    } else {
+        startDestination = Screens.Login.route
+    }
+
+    BackHandler(enabled = currentRoute == Screens.Login.route) {
+        (context as? Activity)?.finish()
     }
 
     LaunchedEffect(currentRoute) {
@@ -172,7 +181,7 @@ fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, curren
         ) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = Screens.Login.route,
+                startDestination = startDestination,
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(Screens.Login.route) {
@@ -191,7 +200,7 @@ fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, curren
                     ExpenseScreen(navController, authViewModel)
                 }
                 composable(Screens.Subscription.route) {
-                    SubscriptionScreen(navController, authViewModel)
+                    SubscriptionScreen(navController, authViewModel, subscriptionViewModel)
                 }
                 composable(Screens.CurrencyConverter.route) {
                     CurrencyConverterScreen(navController, authViewModel, currencyViewModel)

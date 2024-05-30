@@ -1,4 +1,4 @@
-package com.example.walletease.screens
+package com.example.walletease.screens.CurrencyConverterScreen.dialogscreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.walletease.dataclasses.Currency
+import com.example.walletease.screens.CurrencyConverterScreen.dataclasses.Currency
 
 @Composable
 fun CurrencySelectionDialog(
