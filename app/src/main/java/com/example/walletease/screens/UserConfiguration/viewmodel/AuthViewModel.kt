@@ -5,20 +5,26 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task
+import com.google.firebase.Firebase
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.auth
 
-//todo: make it check if password is used before. Also better error messages
 class AuthViewModel(private val state: SavedStateHandle) : ViewModel() {
 
     private var _currentUser = MutableLiveData<FirebaseUser?>(null)
     val currentUser: LiveData<FirebaseUser?> get() = _currentUser
 
     var showError = MutableLiveData("")
+
+    init {
+        val user = Firebase.auth.currentUser
+        _currentUser.value = user
+    }
 
     fun setUser(user: FirebaseUser?) {
         _currentUser.value = user

@@ -40,33 +40,37 @@ import com.example.walletease.screens.CurrencyConverterScreen.viewmodel.Currency
 import com.example.walletease.screens.DashboardScreen.DashboardScreen
 import com.example.walletease.screens.DashboardScreen.dialogscreens.ExpenseScreen
 import com.example.walletease.screens.DashboardScreen.dialogscreens.IncomeScreen
-import com.example.walletease.screens.UserConfiguration.ProfileScreen
+import com.example.walletease.screens.DashboardScreen.viewmodel.TransactionViewModel
 import com.example.walletease.screens.SplitScreen.SplitScreen
 import com.example.walletease.screens.SubscriptionScreen.SubscriptionScreen
 import com.example.walletease.screens.SubscriptionScreen.viewmodel.SubscriptionViewModel
 import com.example.walletease.screens.UserConfiguration.LoginScreen
+import com.example.walletease.screens.UserConfiguration.ProfileScreen
 import com.example.walletease.screens.UserConfiguration.SignUpScreen
 import com.example.walletease.screens.UserConfiguration.viewmodel.AuthViewModel
+import com.example.walletease.screens.UserConfiguration.viewmodel.SharedViewModel
 import com.example.walletease.sealedclasses.Screens
 import com.example.walletease.sealedclasses.items
 import com.example.walletease.ui.theme.WalletEaseTheme
-import com.example.walletease.screens.UserConfiguration.viewmodel.SharedViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 
-//todo: it closes even if there is more back history at dashboard screen
 class MainActivity : ComponentActivity() {
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
         Firebase.firestore
         enableEdgeToEdge()
 
+        auth = Firebase.auth
         val authViewModel: AuthViewModel by viewModels()
         val currencyViewModel: CurrencyViewModel by viewModels()
         val subscriptionViewModel: SubscriptionViewModel by viewModels()
+        val transactionViewModel: TransactionViewModel by viewModels()
 
         setContent {
             WalletEaseTheme {
@@ -74,7 +78,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background) {
-                    MyApp(authViewModel, sharedViewModel, currencyViewModel, subscriptionViewModel)
+                    MyApp(authViewModel, sharedViewModel, currencyViewModel, subscriptionViewModel, transactionViewModel)
                 }
             }
         }
@@ -82,7 +86,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, currencyViewModel: CurrencyViewModel, subscriptionViewModel: SubscriptionViewModel) {
+fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, currencyViewModel: CurrencyViewModel, subscriptionViewModel: SubscriptionViewModel, transactionViewModel: TransactionViewModel) {
     val navController = rememberNavController()
     val context = LocalContext.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -94,7 +98,7 @@ fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, curren
     val user = Firebase.auth.currentUser
 
     if (user != null) {
-        startDestination = Screens.Profile.route
+        startDestination = Screens.Dashboard.route
     } else {
         startDestination = Screens.Login.route
     }
@@ -191,13 +195,13 @@ fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, curren
                     SignUpScreen(navController, authViewModel, sharedViewModel)
                 }
                 composable(Screens.Dashboard.route) {
-                    DashboardScreen(navController, authViewModel)
+                    DashboardScreen(navController)
                 }
                 composable(Screens.Income.route) {
-                    IncomeScreen(navController, authViewModel)
+                    IncomeScreen(navController, transactionViewModel)
                 }
                 composable(Screens.Expense.route) {
-                    ExpenseScreen(navController, authViewModel)
+                    ExpenseScreen(navController, transactionViewModel)
                 }
                 composable(Screens.Subscription.route) {
                     SubscriptionScreen(navController, authViewModel, subscriptionViewModel)
