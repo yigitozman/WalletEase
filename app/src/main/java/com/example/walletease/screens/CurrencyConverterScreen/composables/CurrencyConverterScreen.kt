@@ -21,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,8 +42,7 @@ import com.example.walletease.screens.UserConfiguration.viewmodel.AuthViewModel
 
 //todo: bottom conversion stays when i change screen but amount on text field goes away
 @Composable
-fun CurrencyConverterScreen(navController: NavController, authViewModel: AuthViewModel, currencyViewModel: CurrencyViewModel) {
-    val user by authViewModel.currentUser.observeAsState()
+fun CurrencyConverterScreen(currencyViewModel: CurrencyViewModel) {
     val colors = MaterialTheme.colorScheme
     var amount by remember { mutableStateOf(TextFieldValue("")) }
     var baseCurrency by remember { mutableStateOf("USD") }
@@ -52,7 +50,6 @@ fun CurrencyConverterScreen(navController: NavController, authViewModel: AuthVie
     val conversionResult by currencyViewModel.conversionResult.collectAsState()
     val isFetching by currencyViewModel.isFetching.collectAsState()
 
-    var isPlaying by remember { mutableStateOf(true) }
     val composition by rememberLottieComposition(
         spec = LottieCompositionSpec.RawRes(R.raw.currencyconverteranimation)
     )

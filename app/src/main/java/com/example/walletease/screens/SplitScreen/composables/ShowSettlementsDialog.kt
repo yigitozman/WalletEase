@@ -18,8 +18,12 @@ fun ShowSettlementsDialog(settlements: List<Settlement>, onDismiss: () -> Unit) 
         },
         text = {
             Column {
-                settlements.forEach { settlement ->
-                    Text("${settlement.from} should pay ${settlement.to} $${settlement.amount}")
+                if(settlements.isEmpty()) {
+                    Text("Everything is settled.")
+                } else {
+                    settlements.forEach { settlement ->
+                        Text("${settlement.from} should pay ${settlement.to} $${settlement.amount}")
+                    }
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.example.walletease.screens.CurrencyConverterScreen.dataclasses
 
+//todo: add try
 data class Currency(
     val code: String,
     val name: String,

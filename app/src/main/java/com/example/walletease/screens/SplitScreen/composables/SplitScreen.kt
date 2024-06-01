@@ -28,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -46,12 +44,11 @@ import com.example.walletease.R
 import com.example.walletease.screens.SplitScreen.dataclasses.Participant
 import com.example.walletease.screens.SplitScreen.dataclasses.ParticipantWithPayments
 import com.example.walletease.screens.SplitScreen.dataclasses.Settlement
-import com.example.walletease.screens.UserConfiguration.viewmodel.AuthViewModel
 import java.util.Locale
 
 //todo: some little ui problems keyboard text box etc.
 @Composable
-fun SplitScreen(navController: NavController, authViewModel: AuthViewModel) {
+fun SplitScreen() {
     var participantCount by rememberSaveable { mutableStateOf(0) }
     var participants by rememberSaveable { mutableStateOf(listOf<ParticipantWithPayments>()) }
     var showSettlementsDialog by rememberSaveable { mutableStateOf(false) }
@@ -60,7 +57,6 @@ fun SplitScreen(navController: NavController, authViewModel: AuthViewModel) {
     var editingParticipantIndex by rememberSaveable { mutableStateOf(-1) }
     var editingPaymentIndex by rememberSaveable { mutableStateOf(-1) }
 
-    var isPlaying by remember { mutableStateOf(true) }
     val composition by rememberLottieComposition(
         spec = LottieCompositionSpec.RawRes(R.raw.splitscreenanimation)
     )
@@ -201,9 +197,13 @@ fun calculateSettlements(participants: List<ParticipantWithPayments>): List<Sett
 
     participants.forEach { participantWithPayments ->
         participantWithPayments.payments.forEach { payment ->
-            if (!payment.excludedParticipants.contains(participantWithPayments.participant.name)) {
-                balances[participantWithPayments.participant.name] = balances[participantWithPayments.participant.name]!! + payment.amount
+            val includedParticipants = participants.map { it.participant.name }.subtract(payment.excludedParticipants).toList()
+            val splitAmount = payment.amount / includedParticipants.size
+
+            includedParticipants.forEach { participant ->
+                balances[participant] = balances[participant]!! - splitAmount
             }
+            balances[participantWithPayments.participant.name] = balances[participantWithPayments.participant.name]!! + payment.amount
         }
     }
 
@@ -223,19 +223,25 @@ fun calculateSettlements(participants: List<ParticipantWithPayments>): List<Sett
         val debtorEntry = debtors.entries.first()
 
         val amountToSettle = minOf(creditorEntry.value, -debtorEntry.value)
-        val amountToSettleRounded = String.format(Locale.US, "%.2f", amountToSettle).toDouble()
-        settlements.add(Settlement(from = debtorEntry.key, to = creditorEntry.key, amount = amountToSettleRounded))
 
-        creditors[creditorEntry.key] = creditorEntry.value - amountToSettle
-        debtors[debtorEntry.key] = debtorEntry.value + amountToSettle
+        if (amountToSettle > 0) {
+            val amountToSettleRounded = String.format(Locale.US, "%.2f", amountToSettle).toDouble()
+            settlements.add(Settlement(from = debtorEntry.key, to = creditorEntry.key, amount = amountToSettleRounded))
 
-        if (creditors[creditorEntry.key] == 0.0) {
+            creditors[creditorEntry.key] = creditorEntry.value - amountToSettle
+            debtors[debtorEntry.key] = debtorEntry.value + amountToSettle
+
+            if (creditors[creditorEntry.key] == 0.0) {
+                creditors.remove(creditorEntry.key)
+            }
+            if (debtors[debtorEntry.key] == 0.0) {
+                debtors.remove(debtorEntry.key)
+            }
+        } else {
             creditors.remove(creditorEntry.key)
-        }
-        if (debtors[debtorEntry.key] == 0.0) {
             debtors.remove(debtorEntry.key)
         }
     }
 
-    return settlements
+    return settlements.filter { it.amount > 0 }
 }

@@ -35,16 +35,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.walletease.screens.SubscriptionScreen.dataclass.Subscription
 import com.example.walletease.screens.SubscriptionScreen.viewmodel.SubscriptionViewModel
-import com.example.walletease.screens.UserConfiguration.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubscriptionScreen(
-    navController: NavController,
-    authViewModel: AuthViewModel,
     subscriptionViewModel: SubscriptionViewModel
 ) {
     val subscriptions by subscriptionViewModel.subscriptions.observeAsState(initial = listOf())

@@ -2,7 +2,6 @@ package com.example.walletease.screens.UserConfiguration.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
@@ -14,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 
-class AuthViewModel(private val state: SavedStateHandle) : ViewModel() {
+class AuthViewModel : ViewModel() {
 
     private var _currentUser = MutableLiveData<FirebaseUser?>(null)
     val currentUser: LiveData<FirebaseUser?> get() = _currentUser

@@ -48,7 +48,8 @@ fun PaymentsInput(
                     },
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 8.dp)
+                        .padding(end = 8.dp),
+                    enabled = false
                 )
                 OutlinedTextField(
                     value = payment.amount.toString(),
@@ -59,7 +60,8 @@ fun PaymentsInput(
                     },
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 8.dp)
+                        .padding(end = 8.dp),
+                    enabled = false
                 )
                 IconButton(onClick = { onEditPayment(index) }) {
                     Icon(Icons.Default.Edit, contentDescription = "Edit Payment")

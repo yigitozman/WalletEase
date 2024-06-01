@@ -46,12 +46,10 @@ import com.example.walletease.sealedclasses.Screens
 @Composable
 fun ProfileScreen(navController: NavController, authViewModel: AuthViewModel) {
     val currentUser by authViewModel.currentUser.observeAsState()
-    var newUsername by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var updateMessage by remember { mutableStateOf("") }
     var isSuccess by remember { mutableStateOf(true) }
 
-    var isPlaying by remember { mutableStateOf(true) }
     val composition by rememberLottieComposition(
         spec = LottieCompositionSpec.RawRes(R.raw.profileanimation)
     )

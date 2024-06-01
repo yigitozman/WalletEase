@@ -26,7 +26,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.walletease.screens.DashboardScreen.dataclasses.Transaction
 import com.example.walletease.screens.DashboardScreen.viewmodel.TransactionViewModel
 import java.text.SimpleDateFormat
@@ -35,7 +34,6 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IncomeScreen(
-    navController: NavController,
     transactionViewModel: TransactionViewModel = viewModel()
 ) {
     val incomeTransactions by transactionViewModel.incomeTransactions.observeAsState(initial = listOf())

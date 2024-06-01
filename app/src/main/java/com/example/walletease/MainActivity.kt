@@ -198,19 +198,19 @@ fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, curren
                     DashboardScreen(navController)
                 }
                 composable(Screens.Income.route) {
-                    IncomeScreen(navController, transactionViewModel)
+                    IncomeScreen(transactionViewModel)
                 }
                 composable(Screens.Expense.route) {
-                    ExpenseScreen(navController, transactionViewModel)
+                    ExpenseScreen(transactionViewModel)
                 }
                 composable(Screens.Subscription.route) {
-                    SubscriptionScreen(navController, authViewModel, subscriptionViewModel)
+                    SubscriptionScreen(subscriptionViewModel)
                 }
                 composable(Screens.CurrencyConverter.route) {
-                    CurrencyConverterScreen(navController, authViewModel, currencyViewModel)
+                    CurrencyConverterScreen(currencyViewModel)
                 }
                 composable(Screens.Split.route) {
-                    SplitScreen(navController, authViewModel)
+                    SplitScreen()
                 }
                 composable(Screens.Profile.route) {
                     ProfileScreen(navController, authViewModel)
