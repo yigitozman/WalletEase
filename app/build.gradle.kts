@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation("com.google.firebase:firebase-messaging")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

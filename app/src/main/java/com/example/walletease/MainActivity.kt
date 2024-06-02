@@ -2,6 +2,7 @@ package com.example.walletease
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -56,7 +57,9 @@ import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
@@ -65,6 +68,8 @@ class MainActivity : ComponentActivity() {
         FirebaseApp.initializeApp(this)
         Firebase.firestore
         enableEdgeToEdge()
+
+        fetchAndSaveFcmToken()
 
         auth = Firebase.auth
         val authViewModel: AuthViewModel by viewModels()
@@ -82,6 +87,41 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+}
+
+fun fetchAndSaveFcmToken() {
+    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+        if (!task.isSuccessful) {
+            Log.w("MainActivity", "Fetching FCM registration token failed", task.exception)
+            return@addOnCompleteListener
+        }
+
+        // Get new FCM registration token
+        val token = task.result
+        // Save the token to Firestore or your backend
+        saveTokenToFirestore(token)
+    }
+}
+
+private fun saveTokenToFirestore(token: String) {
+    val user = FirebaseAuth.getInstance().currentUser
+    user?.let {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("subscriptions")
+            .whereEqualTo("userId", it.uid)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    db.collection("subscriptions").document(document.id)
+                        .update("fcmToken", token)
+                        .addOnSuccessListener { Log.d("MainActivity", "Token saved successfully to subscription: ${document.id}") }
+                        .addOnFailureListener { e -> Log.w("MainActivity", "Error saving token to subscription: ${document.id}", e) }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("MainActivity", "Error fetching subscriptions", e)
+            }
     }
 }
 

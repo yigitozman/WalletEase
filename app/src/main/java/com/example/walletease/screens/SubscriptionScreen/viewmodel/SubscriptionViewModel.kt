@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.walletease.fetchAndSaveFcmToken
 import com.example.walletease.screens.SubscriptionScreen.dataclass.Subscription
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -56,6 +57,7 @@ class SubscriptionViewModel : ViewModel() {
         db.collection("subscriptions").add(newSubscription)
             .addOnSuccessListener { documentReference ->
                 Log.d("SubscriptionViewModel", "DocumentSnapshot added with ID: ${documentReference.id}")
+                fetchAndSaveFcmToken()
             }
             .addOnFailureListener { e ->
                 Log.w("SubscriptionViewModel", "Error adding document", e)

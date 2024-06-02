@@ -129,7 +129,7 @@ fun SubscriptionItem(subscription: Subscription, onEdit: (Subscription) -> Unit,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Price: $${subscription.subscriptionPrice}",
+                    text = "Price: ${subscription.subscriptionPrice}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
