@@ -1,5 +1,6 @@
 package com.example.walletease.components.CurrencyConverterComponent.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.walletease.api.ApiClient
@@ -28,7 +29,7 @@ class CurrencyViewModel : ViewModel() {
                 val response = apiService.getLatestRates(apiKey, base)
                 _exchangeRates.value = response.rates
             } catch (e: Exception) {
-                // Handle error
+                Log.d("CurrencyViewModel", "Error fetching rates: ${e.message}")
             } finally {
                 _isFetching.value = false
             }

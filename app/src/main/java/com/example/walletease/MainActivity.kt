@@ -98,9 +98,7 @@ fun fetchAndSaveFcmToken() {
             return@addOnCompleteListener
         }
 
-        // Get new FCM registration token
         val token = task.result
-        // Save the token to Firestore or your backend
         saveTokenToFirestore(token)
     }
 }
