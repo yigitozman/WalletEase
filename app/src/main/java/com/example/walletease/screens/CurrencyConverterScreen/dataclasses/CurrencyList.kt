@@ -1,6 +1,5 @@
 package com.example.walletease.screens.CurrencyConverterScreen.dataclasses
 
-//todo: add try
 data class Currency(
     val code: String,
     val name: String,
@@ -17,5 +16,6 @@ val predefinedCurrencies = listOf(
     Currency("CHF", "Swiss Franc", "CHF"),
     Currency("CNY", "Chinese Yuan", "¥"),
     Currency("SEK", "Swedish Krona", "kr"),
-    Currency("NZD", "New Zealand Dollar", "NZ$")
+    Currency("NZD", "New Zealand Dollar", "NZ$"),
+    Currency("TRY", "Turkish Lira", "₺")
 )

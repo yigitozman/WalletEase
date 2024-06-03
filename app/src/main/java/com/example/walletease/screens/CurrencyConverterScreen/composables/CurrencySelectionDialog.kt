@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -56,8 +58,8 @@ fun CurrencySelectionDialog(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Column(modifier = Modifier.fillMaxHeight(0.6f)) {
-                    filteredCurrencies.forEach { currency ->
+                LazyColumn(modifier = Modifier.fillMaxHeight(0.6f)) {
+                    items(filteredCurrencies) { currency ->
                         TextButton(onClick = {
                             onCurrencySelected(currency.code)
                             onDismissRequest()

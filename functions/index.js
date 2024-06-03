@@ -12,7 +12,8 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 
 exports.sendSubscriptionReminder = functions.pubsub
-    .schedule("every 24 hours")
+    .schedule("0 15 * * *")
+    .timeZone("Europe/Istanbul")
     .onRun(async (context) => {
       const db = admin.firestore();
       const today = new Date();

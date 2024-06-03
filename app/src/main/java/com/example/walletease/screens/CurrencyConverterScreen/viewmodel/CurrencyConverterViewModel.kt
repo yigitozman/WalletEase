@@ -52,4 +52,7 @@ class CurrencyViewModel : ViewModel() {
             }
         }
     }
+    fun clearResult() {
+        _conversionResult.value = null
+    }
 }

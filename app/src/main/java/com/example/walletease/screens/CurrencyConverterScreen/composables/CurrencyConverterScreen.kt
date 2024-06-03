@@ -19,6 +19,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,10 +27,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -38,9 +39,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.walletease.R
 import com.example.walletease.screens.CurrencyConverterScreen.dataclasses.predefinedCurrencies
 import com.example.walletease.screens.CurrencyConverterScreen.viewmodel.CurrencyViewModel
-import com.example.walletease.screens.UserConfiguration.viewmodel.AuthViewModel
 
-//todo: bottom conversion stays when i change screen but amount on text field goes away
 @Composable
 fun CurrencyConverterScreen(currencyViewModel: CurrencyViewModel) {
     val colors = MaterialTheme.colorScheme
@@ -60,6 +59,12 @@ fun CurrencyConverterScreen(currencyViewModel: CurrencyViewModel) {
 
     var showBaseCurrencyDialog by remember { mutableStateOf(false) }
     var showTargetCurrencyDialog by remember { mutableStateOf(false) }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            currencyViewModel.clearResult()
+        }
+    }
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -85,7 +90,7 @@ fun CurrencyConverterScreen(currencyViewModel: CurrencyViewModel) {
                     value = amount,
                     onValueChange = { if (it.text.isEmpty() || it.text.matches(Regex("^\\d*\\.?\\d*\$"))) { amount = it }},
                     label = { Text("Amount") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                     modifier = Modifier.fillMaxWidth()
                 )
             }

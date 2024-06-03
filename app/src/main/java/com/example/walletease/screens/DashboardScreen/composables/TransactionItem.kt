@@ -21,7 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.walletease.screens.DashboardScreen.dataclasses.Transaction
+import com.example.walletease.screens.DashboardScreen.dataclass.Transaction
+import java.text.SimpleDateFormat
 
 @Composable
 fun TransactionItem(transaction: Transaction, onEdit: (Transaction) -> Unit, onDelete: (Transaction) -> Unit) {
@@ -52,7 +53,7 @@ fun TransactionItem(transaction: Transaction, onEdit: (Transaction) -> Unit, onD
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Date: ${transaction.date.toDate()}", // Format date as needed
+                    text = "Date: ${SimpleDateFormat("dd/MM/yyyy").format(transaction.date.toDate())}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

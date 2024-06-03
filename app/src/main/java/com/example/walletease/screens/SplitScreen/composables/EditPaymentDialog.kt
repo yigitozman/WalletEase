@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.walletease.screens.SplitScreen.dataclasses.Payment
@@ -59,16 +60,21 @@ fun EditPaymentDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
-                    label = { Text("Description") }
+                    label = { Text("Description") },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
                 )
                 OutlinedTextField(
                     value = newAmount,
-                    onValueChange = { newAmount = it },
+                    onValueChange = {
+                        if (it.all { char -> char.isDigit() || char == '.' }) {
+                            newAmount = it
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     label = { Text("Amount") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
                 )
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 Text("Exclude Participants:", style = MaterialTheme.typography.bodyLarge)

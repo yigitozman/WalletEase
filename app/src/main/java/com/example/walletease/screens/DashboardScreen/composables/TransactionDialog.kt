@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
@@ -32,9 +33,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.example.walletease.screens.DashboardScreen.dataclasses.Transaction
+import com.example.walletease.screens.DashboardScreen.dataclass.Transaction
 import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -100,18 +103,22 @@ fun TransactionDialog(
                     value = transactionName,
                     onValueChange = { transactionName = it },
                     label = { Text("Transaction Name") },
-                    singleLine = true
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
 
                 OutlinedTextField(
                     value = transactionAmount,
                     onValueChange = {
-                        transactionAmount = it
-                        amountError = null
+                        if (it.all { char -> char.isDigit() || char == '.' }) {
+                            transactionAmount = it
+                            amountError = null
+                        }
                     },
                     label = { Text("Transaction Amount") },
                     singleLine = true,
-                    isError = amountError != null
+                    isError = amountError != null,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
                 )
 
                 if (amountError != null) {
@@ -122,13 +129,18 @@ fun TransactionDialog(
                     )
                 }
 
-                Button(onClick = { datePickerDialog.show() }) {
-                    Text("Select Date")
-                }
                 Text(
                     text = "Selected Date: ${SimpleDateFormat("dd/MM/yyyy").format(transactionDate)}",
                     style = MaterialTheme.typography.bodyMedium
                 )
+
+                Button(
+                    onClick = {
+                        datePickerDialog.show() },
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary)
+                ) {
+                    Text("Select Date")
+                }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),

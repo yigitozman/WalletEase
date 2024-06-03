@@ -3,6 +3,7 @@ package com.example.walletease.screens.SplitScreen.composables
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -12,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.walletease.screens.SplitScreen.dataclasses.ParticipantWithPayments
 
@@ -42,7 +44,8 @@ fun ParticipantsInput(
                             .fillMaxWidth()
                             .padding(bottom = 8.dp),
                         placeholder = { Text(participantWithPayments.participant.name) },
-                        label = { Text("Participant Name") }
+                        label = { Text("Participant Name") },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                     )
 
                     PaymentsInput(

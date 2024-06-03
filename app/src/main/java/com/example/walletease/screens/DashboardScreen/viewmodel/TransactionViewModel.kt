@@ -4,13 +4,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.walletease.screens.DashboardScreen.dataclasses.Transaction
+import com.example.walletease.screens.DashboardScreen.dataclass.Transaction
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Calendar
 
-//todo: change transaction adding to only day month and year do not include hour and gmt
 class TransactionViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
     private var currentUser: FirebaseUser? = null

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.walletease.screens.SubscriptionScreen.dataclass.Subscription
@@ -79,7 +82,8 @@ fun SubscriptionDialog(
                     value = subscriptionName,
                     onValueChange = { subscriptionName = it },
                     label = { Text("Subscription Name") },
-                    singleLine = true
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
 
                 OutlinedTextField(
@@ -91,7 +95,8 @@ fun SubscriptionDialog(
                     label = { Text("Payment Date (e.g., '15')") },
                     singleLine = true,
                     isError = paymentDateError != null,
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next)
                 )
                 paymentDateError?.let { error ->
                     Text(
@@ -104,13 +109,16 @@ fun SubscriptionDialog(
                 OutlinedTextField(
                     value = subscriptionPrice,
                     onValueChange = {
-                        subscriptionPrice = it
-                        subscriptionPriceError = null
+                        if (it.all { char -> char.isDigit() || char == '.' }) {
+                            subscriptionPrice = it
+                            subscriptionPriceError = null
+                        }
                     },
                     label = { Text("Subscription Price") },
                     singleLine = true,
                     isError = subscriptionPriceError != null,
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
                 )
                 subscriptionPriceError?.let { error ->
                     Text(

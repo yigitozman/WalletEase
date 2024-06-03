@@ -38,7 +38,6 @@ import com.hd.charts.style.ChartViewStyle
 import com.hd.charts.style.PieChartDefaults
 import java.util.Calendar
 
-//todo: when i open the app logged in i see the no data available text before the chart appears
 @Composable
 fun DashboardScreen(
     navController: NavController,

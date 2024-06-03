@@ -1,4 +1,4 @@
-package com.example.walletease.screens.DashboardScreen.dataclasses
+package com.example.walletease.screens.DashboardScreen.dataclass
 
 import com.google.firebase.Timestamp
 

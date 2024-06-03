@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.walletease.screens.SplitScreen.dataclasses.Payment
@@ -82,18 +83,23 @@ fun PaymentsInput(
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             placeholder = { Text("New payment description") },
-            label = { Text("Description") }
+            label = { Text("Description") },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
         )
 
         OutlinedTextField(
             value = newPaymentAmount,
-            onValueChange = { newPaymentAmount = it },
+            onValueChange = {
+                if (it.all { char -> char.isDigit() || char == '.' }) {
+                    newPaymentAmount = it
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             placeholder = { Text("New payment amount") },
             label = { Text("Amount") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
         )
 
         Button(
