@@ -1,12 +1,12 @@
 package com.example.walletease.api
 
-import com.example.walletease.screens.CurrencyConverterScreen.dataclasses.CurrencyConvertResponse
+import com.example.walletease.components.CurrencyConverterComponent.dataclasses.CurrencyConvertResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface CurrencyApiService {
+interface ApiClient {
     @GET("latest")
     suspend fun getLatestRates(
         @Query("access_key") apiKey: String,
@@ -16,12 +16,12 @@ interface CurrencyApiService {
     companion object {
         private const val BASE_URL = "https://api.fxratesapi.com/"
 
-        fun create(): CurrencyApiService {
+        fun create(): ApiClient {
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-            return retrofit.create(CurrencyApiService::class.java)
+            return retrofit.create(ApiClient::class.java)
         }
     }
 }
