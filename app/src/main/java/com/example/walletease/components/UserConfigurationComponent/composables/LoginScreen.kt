@@ -1,5 +1,6 @@
 package com.example.walletease.components.UserConfigurationComponent.composables
 
+import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -59,8 +61,8 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel, shar
     val focusRequesterPassword = FocusRequester()
     val showError by authViewModel.showError.observeAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
+    val context = LocalContext.current
 
-    var isPlaying by remember { mutableStateOf(true) }
     val composition by rememberLottieComposition(
         spec = LottieCompositionSpec.RawRes(R.raw.loginanimation)
     )
@@ -79,6 +81,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel, shar
     }
 
     BackHandler {
+        (context as? Activity)?.finish()
     }
 
     if (successMessage?.isNotEmpty() == true) {
