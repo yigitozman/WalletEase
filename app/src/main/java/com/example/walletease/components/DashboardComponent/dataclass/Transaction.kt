@@ -6,6 +6,6 @@ data class Transaction(
     val id: String = "",
     val name: String = "",
     val amount: Float = 0f,
-    val date: Timestamp = Timestamp.now(), // Store date as Firestore Timestamp
+    val date: Timestamp = Timestamp.now(),
     val userId: String = ""
 )
