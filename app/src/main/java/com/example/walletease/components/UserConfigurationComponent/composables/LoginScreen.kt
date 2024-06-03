@@ -14,7 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,8 +21,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -47,12 +44,11 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.walletease.R
 import com.example.walletease.components.UserConfigurationComponent.viewmodel.AuthViewModel
-import com.example.walletease.components.UserConfigurationComponent.viewmodel.SharedViewModel
 import com.example.walletease.sealedclasses.Screens
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(navController: NavController, authViewModel: AuthViewModel, sharedViewModel: SharedViewModel) {
+fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
     authViewModel.clearError()
 
     val colors = MaterialTheme.colorScheme
@@ -72,39 +68,8 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel, shar
         iterations = LottieConstants.IterateForever
     )
 
-    val successMessage = sharedViewModel.successMessage.collectAsState().value
-
-    DisposableEffect(email, password) {
-        onDispose {
-            sharedViewModel.setSuccessMessage("")
-        }
-    }
-
     BackHandler {
         (context as? Activity)?.finish()
-    }
-
-    if (successMessage?.isNotEmpty() == true) {
-        AlertDialog(
-            onDismissRequest = {
-                sharedViewModel.setSuccessMessage("")
-            },
-            title = {
-                Text(text = "Success")
-            },
-            text = {
-                Text(text = successMessage)
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        sharedViewModel.setSuccessMessage("")
-                    }
-                ) {
-                    Text("OK")
-                }
-            }
-        )
     }
 
     Surface(

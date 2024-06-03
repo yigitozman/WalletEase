@@ -30,7 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -49,7 +48,6 @@ import com.example.walletease.components.UserConfigurationComponent.composables.
 import com.example.walletease.components.UserConfigurationComponent.composables.ProfileScreen
 import com.example.walletease.components.UserConfigurationComponent.composables.SignUpScreen
 import com.example.walletease.components.UserConfigurationComponent.viewmodel.AuthViewModel
-import com.example.walletease.components.UserConfigurationComponent.viewmodel.SharedViewModel
 import com.example.walletease.sealedclasses.Screens
 import com.example.walletease.sealedclasses.items
 import com.example.walletease.ui.theme.WalletEaseTheme
@@ -80,11 +78,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             WalletEaseTheme {
-                val sharedViewModel: SharedViewModel = viewModel()
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background) {
-                    MyApp(authViewModel, sharedViewModel, currencyViewModel, subscriptionViewModel, transactionViewModel)
+                    MyApp(authViewModel, currencyViewModel, subscriptionViewModel, transactionViewModel)
                 }
             }
         }
@@ -125,7 +122,7 @@ private fun saveTokenToFirestore(token: String) {
 }
 
 @Composable
-fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, currencyViewModel: CurrencyViewModel, subscriptionViewModel: SubscriptionViewModel, transactionViewModel: TransactionViewModel) {
+fun MyApp(authViewModel: AuthViewModel, currencyViewModel: CurrencyViewModel, subscriptionViewModel: SubscriptionViewModel, transactionViewModel: TransactionViewModel) {
     val navController = rememberNavController()
     val context = LocalContext.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -136,10 +133,10 @@ fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, curren
 
     val user = Firebase.auth.currentUser
 
-    if (user != null) {
-        startDestination = Screens.Dashboard.route
+    startDestination = if (user != null) {
+        Screens.Dashboard.route
     } else {
-        startDestination = Screens.Login.route
+        Screens.Login.route
     }
 
     BackHandler(enabled = currentRoute == Screens.Login.route) {
@@ -228,10 +225,10 @@ fun MyApp(authViewModel: AuthViewModel, sharedViewModel: SharedViewModel, curren
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(Screens.Login.route) {
-                    LoginScreen(navController, authViewModel, sharedViewModel)
+                    LoginScreen(navController, authViewModel)
                 }
                 composable(Screens.Signup.route) {
-                    SignUpScreen(navController, authViewModel, sharedViewModel)
+                    SignUpScreen(navController, authViewModel)
                 }
                 composable(Screens.Dashboard.route) {
                     DashboardScreen(navController)

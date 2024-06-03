@@ -38,11 +38,11 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.walletease.R
 import com.example.walletease.components.UserConfigurationComponent.viewmodel.AuthViewModel
-import com.example.walletease.components.UserConfigurationComponent.viewmodel.SharedViewModel
+import com.example.walletease.sealedclasses.Screens
 import kotlinx.coroutines.launch
 
 @Composable
-fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel, sharedViewModel: SharedViewModel) {
+fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel) {
 
     authViewModel.clearError()
 
@@ -125,7 +125,6 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel, sha
                             authViewModel.viewModelScope.launch {
                                 authViewModel.signUp(email, password).addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        sharedViewModel.setSuccessMessage("Account created successfully!")
                                         navController.popBackStack()
                                     }
                                 }
@@ -146,7 +145,7 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel, sha
                 Button(
                     onClick = {
                         keyboardController?.hide()
-                        navController.navigate("login_screen")
+                        navController.navigate(Screens.Login.route)
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = colors.primary)
