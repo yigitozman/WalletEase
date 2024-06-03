@@ -52,6 +52,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.lottie.compose)
     implementation(platform(libs.firebase.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -69,6 +70,11 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.charts)
+    implementation(libs.firebase.firestore)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation("com.google.firebase:firebase-messaging")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
