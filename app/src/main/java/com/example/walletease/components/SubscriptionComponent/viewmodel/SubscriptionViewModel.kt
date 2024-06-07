@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.walletease.fetchAndSaveFcmToken
 import com.example.walletease.components.SubscriptionComponent.dataclass.Subscription
+import com.example.walletease.fetchAndSaveFcmToken
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -74,6 +74,7 @@ class SubscriptionViewModel : ViewModel() {
         db.collection("subscriptions").document(subscription.id).set(updatedSubscription)
             .addOnSuccessListener {
                 Log.d("SubscriptionViewModel", "DocumentSnapshot successfully updated!")
+                fetchAndSaveFcmToken()
             }
             .addOnFailureListener { e ->
                 Log.w("SubscriptionViewModel", "Error updating document", e)
