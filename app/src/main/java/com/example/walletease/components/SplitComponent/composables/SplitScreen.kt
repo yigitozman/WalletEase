@@ -25,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -47,13 +48,13 @@ import java.util.Locale
 
 @Composable
 fun SplitScreen() {
-    var participantCount by rememberSaveable { mutableStateOf(0) }
+    var participantCount by rememberSaveable { mutableIntStateOf(0) }
     var participants by rememberSaveable { mutableStateOf(listOf<ParticipantWithPayments>()) }
     var showSettlementsDialog by rememberSaveable { mutableStateOf(false) }
     var showEditPaymentsDialog by rememberSaveable { mutableStateOf(false) }
     var settlements by rememberSaveable { mutableStateOf(listOf<Settlement>()) }
-    var editingParticipantIndex by rememberSaveable { mutableStateOf(-1) }
-    var editingPaymentIndex by rememberSaveable { mutableStateOf(-1) }
+    var editingParticipantIndex by rememberSaveable { mutableIntStateOf(-1) }
+    var editingPaymentIndex by rememberSaveable { mutableIntStateOf(-1) }
 
     val composition by rememberLottieComposition(
         spec = LottieCompositionSpec.RawRes(R.raw.splitscreenanimation)
